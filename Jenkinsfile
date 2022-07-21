@@ -24,5 +24,12 @@ pipeline {
             echo "deploying the application..."
           }
        } 
+        
+       stage("update-issue") {
+    
+          steps {
+            jiraComment body: 'Integrated wih Jira, Update Issue G5-2', issueKey: 'G5-2'
+          }
+       } 
     }
 }
