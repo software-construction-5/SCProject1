@@ -1,10 +1,6 @@
 pipeline {
     
     agent any
-    
-    environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
-	}
   
     stages {
     
@@ -12,14 +8,6 @@ pipeline {
     
           steps {
             echo "building the application..."
-              sh "docker build -t anthonygfrn/software-construction-group5:latest ."
-          }
-       } 
-        
-       stage("login") {
-    
-          steps {
-              sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USER --password-stdin"
           }
        } 
       
@@ -30,13 +18,6 @@ pipeline {
           }
        } 
       
-       stage("push") {
-    
-          steps {
-              sh 'docker push anthonygfrn/software-construction-group5:latest'
-          }
-       } 
-        
       stage("deploy") {
     
           steps {
@@ -51,9 +32,3 @@ pipeline {
           }
        } 
     }
-    post {
-        always {
-            sh 'docker logout'
-        }
-    }
-}
