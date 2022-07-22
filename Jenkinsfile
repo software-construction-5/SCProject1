@@ -1,6 +1,10 @@
 pipeline {
     
     agent any
+    
+    environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+	}
   
     stages {
     
@@ -8,6 +12,14 @@ pipeline {
     
           steps {
             echo "building the application..."
+              sh "docker build -t anthonygfrn/software-construction-group5:latest ."
+          }
+       } 
+        
+       stage("login") {
+    
+          steps {
+              sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USER --password-stdin"
           }
        } 
       
@@ -15,11 +27,16 @@ pipeline {
     
           steps {
             echo "testing the application..."
-              sh 'chmod +x ./script.sh'
-              sh './script.sh'
           }
        } 
       
+       stage("push") {
+    
+          steps {
+              sh 'docker push anthonygfrn/software-construction-group5:latest'
+          }
+       } 
+        
       stage("deploy") {
     
           steps {
@@ -33,5 +50,10 @@ pipeline {
             jiraComment body: 'Integrated wih Jira, Update Issue G5-2', issueKey: 'G5-2'
           }
        } 
+    }
+    post {
+        always {
+            sh 'docker logout'
+        }
     }
 }
