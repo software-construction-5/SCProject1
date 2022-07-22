@@ -15,6 +15,7 @@ pipeline {
     
           steps {
             echo "testing the application..."
+              sh 'chmod +x ./script.sh'
               sh './script.sh'
           }
        } 
